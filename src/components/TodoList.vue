@@ -11,37 +11,38 @@
           Add
         </button>
       </div>
-      <section v-if="todos.list.length > 0">
+      <section>
         <VueDraggable v-model="todos.list" class="flex flex-col gap-2 w-300px rounded py-4" target=".sort-target"
-          :scroll="true" :animation="150" ghostClass="ghost">
+          :scroll="true" :disabled="disabled" :animation="150" ghostClass="ghost">
           <TransitionGroup type="transition" tag="ul" name="fade" class="sort-target">
             <li v-for="(item, index) in todos.list" :key="item.id"
               class="h-50px bg-neutral-300 rounded flex items-center justify-between p-2 mb-2 rounded-lg cursor-move">
-              <div class="flex items-center">
+              <div class="flex items-center grow">
+                <div class="flex items-center mr-2">
+                  <VueFeather type="align-justify" class="text-neutral-500"></VueFeather>
+                </div>
                 <input v-if="false" type="checkbox" name="todo-checks" v-model="item.check"
                   class="mr-2 appearance-none border-neutral-500 border w-4 h-4 rounded-sm bg-white checked:bg-blue-800 checked:border-0" />
-                <input type="text" v-model="item.name" class="border border-black rounded-md py-1 px-3" />
+                <input type="text" v-model="item.name" @focus="disabled = true" @blur="handleEdit(false)"
+                  @keydown="handleEdit(true)" class="border border-black rounded-md py-1 px-3 w-full" />
               </div>
-              <div @click="todos.delete(index)">
+              <div @click="todos.delete(index)" class="flex items-center">
                 <VueFeather type="more-vertical" class="text-neutral-500"></VueFeather>
               </div>
             </li>
           </TransitionGroup>
         </VueDraggable>
       </section>
-      <div v-if="todos.list.length === 0" class="text-center">
-        <div>You are hassle free! Enjoy your time</div>
-      </div>
-
-      <div>
+      <!-- Development Purposes -->
+      <!-- <div>
         {{ todos.list }}
-      </div>
+      </div> -->
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import VueFeather from "vue-feather";
 import { VueDraggable } from "vue-draggable-plus";
@@ -51,6 +52,11 @@ import { useTodoStore } from "../stores/todo";
 
 const todos = useTodoStore()
 
+onMounted(() => {
+  todos.initValue()
+  console.log(todos.list)
+})
+
 let todo = ref({
   name: '',
   description: '',
@@ -58,12 +64,19 @@ let todo = ref({
   id: uuid.v1()
 })
 
+let disabled = ref(false)
+
 function handleAdd() {
   todos.add(todo)
 }
 
-function handleDelete(index) {
-  todos.delete(index)
+function handleEdit(isDebounce) {
+  let time = isDebounce ? 500 : 0
+  setTimeout(() => {
+    todos.edit(todos.list)
+  }, time);
+
+  this.disabled = false;
 }
 </script>
 
