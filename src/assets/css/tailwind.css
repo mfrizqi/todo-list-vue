@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+    --color-mountain-meadow: oklch(69.587% 0.14907 162.48);
+    --color-mountain-meadow-50: oklch(96.837% 0.03144 174.34);
+    --color-mountain-meadow-100: oklch(94.311% 0.05995 172.58);
+    --color-mountain-meadow-200: oklch(89.679% 0.11053 170.15);
+    --color-mountain-meadow-300: oklch(85.969% 0.15098 167.03);
+    --color-mountain-meadow-400: oklch(83.303% 0.17706 162.76);
+    --color-mountain-meadow-500: oklch(69.587% 0.14907 162.48);
+    --color-mountain-meadow-600: oklch(60.226% 0.12806 162.77);
+    --color-mountain-meadow-700: oklch(50.487% 0.1061 163.2);
+    --color-mountain-meadow-800: oklch(40.251% 0.08291 163.93);
+    --color-mountain-meadow-900: oklch(29.656% 0.0591 164.28);
+    --color-mountain-meadow-950: oklch(23.643% 0.04476 167.33);
+}
