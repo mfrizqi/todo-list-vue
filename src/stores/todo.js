@@ -11,19 +11,19 @@ function getTodoStorage() {
 
 const todosPlaceholder = [
     {
-        id: uuid.v1(),
+        id: '',
         name: "Send presents for mommy <3",
         description: "",
         check: false,
     },
     {
-        id: uuid.v1(),
+        id: '',
         name: "Sunday ride with brother",
         description: "",
         check: false,
     },
     {
-        id: uuid.v1(),
+        id: '',
         name: "Buy pineapple seeds",
         description: "",
         check: false,
@@ -54,15 +54,16 @@ export const useTodoStore = defineStore('todo', {
         },
         initValue() {
             if (localStorage.getItem('todo-list-vuevite') === null) {
-                todosPlaceholder.forEach(placeholder => {
-                    this.list.push(placeholder)
-                });
+                this.list = todosPlaceholder.map(placeholder => ({
+                    ...placeholder,
+                    id: uuid.v4()
+                }));
                 setTodoStorage(this.list)
             } else {
                 this.list = getTodoStorage();
             }
         },
-        edit(todos){
+        edit(todos) {
             this.list = todos
             setTodoStorage(this.list)
         }
