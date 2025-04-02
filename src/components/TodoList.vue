@@ -2,7 +2,7 @@
   <section class="flex justify-center p-8">
     <div class="w-full max-w-[480px]">
       <h1 class="text-3xl font-bold text-center mb-20">Todo List</h1>
-      <div class="flex flex-cols justify-center mb-16">
+      <div class="flex flex-col md:flex-row justify-center mb-16">
         <input
           type="text"
           name="todo-input"
@@ -18,52 +18,52 @@
           Add
         </button>
       </div>
-      <section>
-        <VueDraggable
-          v-model="todos.list"
-          class="flex flex-col gap-2 w-300px rounded py-4"
-          target=".sort-target"
-          :scroll="true"
-          :disabled="disabled"
-          :animation="150"
-          ghostClass="ghost"
+      <VueDraggable
+        v-model="todos.list"
+        class="flex flex-col gap-2 w-300px rounded py-4"
+        target=".sort-target"
+        :scroll="true"
+        :disabled="disabled"
+        :animation="150"
+        ghostClass="ghost"
+      >
+        <TransitionGroup
+          type="transition"
+          tag="div"
+          name="fade"
+          class="sort-target"
+          @before-enter="disableDelete = true"
+          @after-leave="disableDelete = false"
         >
-          <TransitionGroup
-            type="transition"
-            tag="ul"
-            name="fade"
-            class="sort-target"
-            @before-enter="disableDelete = true"
-            @after-leave="disableDelete = false"
+          <div
+            v-for="(item, index) in todos.list"
+            :key="item.id"
+            class="bg-white shadow-md rounded flex justify-between p-2 py-3 mb-3 rounded-lg"
+            :class="{
+              'items-start': todoOption === item.id,
+              'items-center': todoOption !== item.id,
+            }"
           >
-            <li
-              v-for="(item, index) in todos.list"
-              :key="item.id"
-              class="h-50px bg-white shadow-md rounded flex justify-between p-2 py-3 mb-3 rounded-lg"
+            <div
+              class="flex grow cursor-move"
               :class="{
-                'items-start': todoOption === item.id,
+                'items-stretch': todoOption === item.id,
                 'items-center': todoOption !== item.id,
               }"
             >
               <div
-                class="flex grow mr-2 cursor-move"
+                class="flex items-center"
                 :class="{
-                  'items-start': todoOption === item.id,
-                  'items-center': todoOption !== item.id,
+                  'mt-2 self-start': todoOption === item.id,
+                  'mt-0': todoOption !== item.id,
                 }"
               >
-                <div
-                  class="flex items-center mr-4"
-                  :class="{
-                    'mt-1': todoOption === item.id,
-                    'mt-0': todoOption !== item.id,
-                  }"
-                >
-                  <VueFeather
-                    type="menu"
-                    class="text-neutral-500 w-5 h-5"
-                  ></VueFeather>
-                </div>
+                <VueFeather
+                  type="menu"
+                  class="text-neutral-400 w-4 h-4"
+                ></VueFeather>
+              </div>
+              <section class="ml-4 mr-2 grow">
                 <input
                   v-if="false"
                   type="checkbox"
@@ -93,31 +93,38 @@
                     placeholder="Add detail"
                   ></textarea>
                 </div>
-              </div>
+              </section>
               <div
-                @click="todos.delete(index)"
-                class="flex items-center mr-2 cursor-pointer text-neutral-500 hover:text-white hover:bg-rose-500 rounded-md p-1"
+                @click="toggleOpen(item)"
+                class="flex flex-col justify-between"
+                :class="{ 'flex-1': todoOption === item.id }"
               >
-                <VueFeather type="trash-2" class="w-5 h-5"></VueFeather>
-              </div>
-              <div @click="toggleOpen(item)" class="flex cursor-pointer">
-                <VueFeather
-                  type="chevron-down"
-                  class="text-neutral-500 w-5 h-5"
-                  v-if="todoOption !== item.id"
-                >
-                </VueFeather>
-                <VueFeather
-                  type="chevron-up"
-                  class="text-neutral-500 w-5 h-5"
+                <div class="flex justify-center">
+                  <VueFeather
+                    type="chevron-down"
+                    class="text-neutral-500 w-5 h-5"
+                    v-if="todoOption !== item.id"
+                  >
+                  </VueFeather>
+                  <VueFeather
+                    type="chevron-up"
+                    class="text-neutral-500 w-5 h-5"
+                    v-if="todoOption === item.id"
+                  >
+                  </VueFeather>
+                </div>
+                <div
                   v-if="todoOption === item.id"
+                  @click="todos.delete(index)"
+                  class="flex items-center cursor-pointer text-neutral-500 hover:text-white hover:bg-rose-500 p-2 rounded-md shrink"
                 >
-                </VueFeather>
+                  <VueFeather type="trash-2" class="w-4 h-4"></VueFeather>
+                </div>
               </div>
-            </li>
-          </TransitionGroup>
-        </VueDraggable>
-      </section>
+            </div>
+          </div>
+        </TransitionGroup>
+      </VueDraggable>
       <!-- Development Purposes -->
       <!-- <div>
         {{ todos.list }}
@@ -186,9 +193,9 @@ function toggleOpen(item) {
   console.log(todoOption);
   if (!todoOption.value || todoOption.value !== item.id) {
     todoOption.value = item.id;
-  } else if(todoOption.value === item.id) {
+  } else if (todoOption.value === item.id) {
     todoOption.value = null;
-  } 
+  }
 }
 </script>
 
