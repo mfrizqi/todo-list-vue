@@ -14,18 +14,21 @@ const todosPlaceholder = [
         id: '',
         name: "Send presents for mommy <3",
         description: "",
+        created_at: new Date().toLocaleString(),
         check: false,
     },
     {
         id: '',
         name: "Sunday ride with brother",
         description: "",
+        created_at: new Date().toLocaleString(),
         check: false,
     },
     {
         id: '',
         name: "Buy pineapple seeds",
         description: "",
+        created_at: new Date().toLocaleString(),
         check: false,
     },
 ]
@@ -38,11 +41,13 @@ export const useTodoStore = defineStore('todo', {
     },
     actions: {
         add(todo) {
+            const now = new Date().toLocaleString()
             this.list.push(
                 {
                     id: todo.value.id,
                     name: todo.value.name,
                     description: "",
+                    created_at: now,
                     check: false,
                 },
             )

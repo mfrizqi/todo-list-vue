@@ -1,22 +1,23 @@
 <template>
   <section class="flex flex-col items-center justify-center p-8">
     <div class="w-full max-w-[560px]">
-      <h1 class="text-4xl font-bold mb-2 text-neutral-800">To do List</h1>
-      <p class="mb-10 text-neutral-400">Write that down!</p>
+      <h1 class="text-4xl font-bold mb-2 text-neutral-800">Todo List</h1>
+      <p class="mb-10 text-neutral-400">Write that down</p>
       <form action="POST" @submit.prevent="handleAdd" class="mb-16">
         <div class="flex flex-col md:flex-row justify-center">
           <input
             type="text"
             name="todo-input"
             id="todo_input"
-            class="text-zinc-700 text-2xl lg:text-5xl font-semibold border-b border-neutral-500 mr-2 py-2 px-4 w-full focus:outline-none focus:border-mountain-meadow-500 hover:border-mountain-meadow-500"
+            class="text-zinc-700 text-2xl lg:text-5xl font-semibold border-b border-neutral-400 mr-2 py-2 px-4 w-full focus:outline-none focus:border-mountain-meadow-500 hover:border-mountain-meadow-500 transition-all placeholder:text-neutral-300/50"
             v-model="todo.name"
+            placeholder="your ideas"
           />
         </div>
-        <div class="text-sm text-end text-neutral-400 mt-4">
+        <div class="text-sm text-end text-neutral-500/50 mt-4">
           Press <kbd>enter</kbd> or click
           <button
-            class="px-6 py-1 ml-1 bg-mountain-meadow-600 hover:shadow-md shadow-mountain-meadow-600/50 rounded text-white cursor-pointer disabled:opacity-60"
+            class="px-6 py-1 ml-1 bg-mountain-meadow-600 hover:shadow-md shadow-mountain-meadow-600/50 rounded text-white cursor-pointer transition-all"
             :disabled="todo.name.length === 0"
             type="submit"
           >
@@ -27,7 +28,7 @@
     </div>
     <div class="w-full max-w-[560px]">
       <section v-if="todos.list.length === 0">Add some</section>
-      <div class="text-xs text-neutral-300">
+      <div class="text-xs text-neutral-500/50">
         Drag and drop to reorder your to-do list.
       </div>
       <VueDraggable
@@ -38,6 +39,7 @@
         :disabled="disabled"
         :animation="150"
         ghostClass="ghost"
+        @end="onEnd"
       >
         <TransitionGroup
           type="transition"
@@ -78,7 +80,7 @@
               <section class="ml-4 mr-2 grow flex overflow-hidden">
                 <div
                   v-if="todoOption !== item.id"
-                  class="text-zinc-700 line-clamp-3 break-all pr-3"
+                  class="text-zinc-600 line-clamp-3 break-all pr-3"
                 >
                   {{ item.name }}
                 </div>
@@ -100,6 +102,8 @@
                     @keydown="handleEdit(true)"
                     placeholder="Add detail"
                   ></textarea>
+
+                  <div class="text-neutral-400 text-xs">{{ item.created_at }}</div>
                 </div>
               </section>
               <div
@@ -235,6 +239,10 @@ function toggleOpen(item) {
 }
 
 function toggleCheck() {
+  todos.edit(todos.list)
+}
+
+function onEnd(){
   todos.edit(todos.list)
 }
 </script>
