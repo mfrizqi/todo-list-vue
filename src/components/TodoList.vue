@@ -9,9 +9,9 @@
             type="text"
             name="todo-input"
             id="todo_input"
-            class="text-zinc-700 text-2xl lg:text-5xl font-semibold border-b border-neutral-400 mr-2 py-2 px-4 w-full focus:outline-none focus:border-mountain-meadow-500 hover:border-mountain-meadow-500 transition-all placeholder:text-neutral-300/50"
+            class="text-zinc-700 text-2xl lg:text-4xl font-semibold border-b border-neutral-400 mr-2 py-2 px-4 w-full focus:outline-none focus:border-mountain-meadow-500 hover:border-mountain-meadow-500 transition-all placeholder:text-neutral-400/50"
             v-model="todo.name"
-            placeholder="your ideas"
+            placeholder="What needs to be done?"
           />
         </div>
         <div class="text-sm text-end text-neutral-500/50 mt-4">
