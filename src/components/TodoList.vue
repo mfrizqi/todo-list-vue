@@ -1,23 +1,33 @@
 <template>
-  <section class="flex justify-center p-8">
-    <div class="w-full max-w-[480px]">
-      <h1 class="text-3xl font-bold text-center mb-20">Todo List</h1>
-      <div class="flex flex-col md:flex-row justify-center mb-16">
-        <input
-          type="text"
-          name="todo-input"
-          id="todo_input"
-          class="border border-neutral-500 mr-2 rounded-md py-2 px-4 focus:outline-none focus:border-mountain-meadow-500 w-full"
-          v-model="todo.name"
-        />
-        <button
-          @click="handleAdd"
-          class="px-4 py-3 bg-mountain-meadow-600 hover:shadow rounded-md text-white cursor-pointer disabled:opacity-60"
-          :disabled="todo.name.length === 0"
-        >
-          Add
-        </button>
-      </div>
+  <section class="flex flex-col items-center justify-center p-8">
+    <div class="w-full max-w-[560px]">
+      <h1 class="text-4xl font-bold mb-2 text-neutral-800">To do List</h1>
+      <p class="mb-10 text-neutral-400">Write that down!</p>
+      <form action="POST" @submit.prevent="handleAdd" class="mb-16">
+        <div class="flex flex-col md:flex-row justify-center">
+          <input
+            type="text"
+            name="todo-input"
+            id="todo_input"
+            class="text-5xl font-semibold border-b border-neutral-500 mr-2 py-2 px-4 focus:outline-none focus:border-mountain-meadow-500 w-full"
+            v-model="todo.name"
+          />
+        </div>
+        <div class="text-sm text-end text-neutral-400 mt-4">
+          Press <kbd>enter</kbd> or click
+          <button
+            class="px-5 py-1 bg-mountain-meadow-600 hover:shadow rounded-md text-white cursor-pointer disabled:opacity-60"
+            :disabled="todo.name.length === 0"
+            type="submit"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="w-full max-w-[560px]">
+      <section v-if="todos.list.length === 0">Add some</section>
+      <div class="text-xs text-neutral-300">Drag and drop to reorder your to-do list.</div>
       <VueDraggable
         v-model="todos.list"
         class="flex flex-col gap-2 w-300px rounded py-4"
@@ -71,11 +81,14 @@
                   v-model="item.check"
                   class="mr-2 appearance-none border-neutral-500 border w-4 h-4 rounded-sm bg-white checked:bg-blue-800 checked:border-0"
                 />
-                <div v-if="todoOption !== item.id" class="text-zinc-700">
+                <div
+                  v-if="todoOption !== item.id"
+                  class="text-zinc-700 line-clamp-3"
+                >
                   {{ item.name }}
                 </div>
                 <div v-if="todoOption === item.id">
-                  <label class="text-sm text-neutral-500">Title</label>
+                  <label class="text-sm text-neutral-500">Todo Title</label>
                   <input
                     type="text"
                     v-model="item.name"
@@ -83,7 +96,7 @@
                     @keydown="handleEdit(true)"
                     class="border border-neutral-400 rounded-md py-1 px-3 w-full focus:outline-none focus:border-mountain-meadow-500 mb-3 mt-1 text-zinc-600"
                   />
-                  <label class="text-sm text-neutral-500">Detail</label>
+                  <label class="text-sm text-neutral-500">Todo Detail</label>
                   <textarea
                     v-model="item.description"
                     rows="2"
@@ -165,6 +178,7 @@ let disableDelete = ref(false);
 let todoOption = ref(null);
 
 function handleAdd() {
+  event.preventDefault();
   todo.value.id = uuid.v4();
   todos.add(todo);
   setTimeout(() => {
