@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @theme {
     --color-mountain-meadow: oklch(69.587% 0.14907 162.48);
     --color-mountain-meadow-50: oklch(96.837% 0.03144 174.34);
