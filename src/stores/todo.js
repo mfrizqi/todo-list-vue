@@ -71,6 +71,10 @@ export const useTodoStore = defineStore('todo', {
         edit(todos) {
             this.list = todos
             setTodoStorage(this.list)
+        },
+        clearList(){
+            this.list = []
+            setTodoStorage(this.list)
         }
     }
 })

@@ -9,7 +9,7 @@
             type="text"
             name="todo-input"
             id="todo_input"
-            class="text-zinc-700 text-2xl lg:text-4xl font-semibold border-b border-neutral-400 mr-2 py-2 px-4 w-full focus:outline-none focus:border-mountain-meadow-500 hover:border-mountain-meadow-500 transition-all placeholder:text-neutral-400/50"
+            class="text-zinc-700 text-2xl lg:text-4xl font-semibold border-b border-slate-500 mr-2 py-3 px-4 w-full leading-1 focus:outline-none focus:border-mountain-meadow-500 hover:border-mountain-meadow-500 transition-all placeholder:text-neutral-400/50"
             v-model="todo.name"
             placeholder="What needs to be done?"
           />
@@ -17,7 +17,7 @@
         <div class="text-sm text-end text-neutral-500/50 mt-4">
           Press <kbd>enter</kbd> or click
           <button
-            class="px-6 py-1 ml-1 bg-mountain-meadow-600 hover:shadow-md shadow-mountain-meadow-600/50 rounded text-white cursor-pointer transition-all"
+            class="px-6 py-2 ml-1 bg-mountain-meadow-600 hover:shadow-md shadow-mountain-meadow-600/50 rounded text-white cursor-pointer transition-all"
             :disabled="todo.name.length === 0"
             type="submit"
           >
@@ -27,8 +27,27 @@
       </form>
     </div>
     <div class="w-full max-w-[560px]">
-      <section v-if="todos.list.length === 0">Add some</section>
-      <div class="text-xs text-neutral-500/50">
+      <section
+        v-if="todos.list.length === 0"
+        class="text-center my-12 text-neutral-600"
+      >
+        <div class="text-2xl">✍️</div>
+        <div>Add your Todo</div>
+      </section>
+      <section
+        v-if="checkAllTodoDone()"
+        class="text-center mb-12 text-neutral-600"
+      >
+        <div class="text-3xl">👏</div>
+        <div class="mb-2">Hardwork pays off</div>
+        <button
+          @click="todos.clearList"
+          class="text-sm border py-1 px-2 border border-mountain-meadow-600 rounded text-neutral-600 cursor-pointer hover:bg-mountain-meadow-600 hover:text-white hover:shadow-md shadow-mountain-meadow-600/50 transition-all"
+        >
+          Clear All
+        </button>
+      </section>
+      <div v-if="todos.list.length > 0" class="text-xs text-neutral-500/50">
         Drag and drop to reorder your to-do list.
       </div>
       <VueDraggable
@@ -52,7 +71,7 @@
           <div
             v-for="(item, index) in todos.list"
             :key="item.id"
-            class="bg-white shadow-md shadow-neutral-300/50 rounded flex justify-between p-2 py-3 mb-3 rounded-lg"
+            class="bg-white shadow-md shadow-neutral-300/50 rounded flex justify-between p-3 mb-3 rounded-lg"
             :class="{
               'items-start': todoOption === item.id,
               'items-center': todoOption !== item.id,
@@ -77,10 +96,11 @@
                   class="text-neutral-400 w-4 h-4"
                 ></VueFeather>
               </div>
-              <section class="ml-4 mr-2 grow flex overflow-hidden">
+              <section class="ml-4 mr-4 grow flex overflow-hidden">
                 <div
                   v-if="todoOption !== item.id"
                   class="text-zinc-600 line-clamp-3 break-all pr-3"
+                  :class="{ 'opacity-30': item.check }"
                 >
                   {{ item.name }}
                 </div>
@@ -103,7 +123,9 @@
                     placeholder="Add detail"
                   ></textarea>
 
-                  <div class="text-neutral-400 text-xs">{{ item.created_at }}</div>
+                  <div class="text-neutral-400 text-xs">
+                    {{ item.created_at }}
+                  </div>
                 </div>
               </section>
               <div
@@ -116,7 +138,7 @@
                       <input
                         type="checkbox"
                         v-model="item.check"
-                        class="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded border border-slate-300 checked:bg-mountain-meadow-600 checked:border-mountain-meadow-600"
+                        class="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded border border-neutral-300 checked:bg-mountain-meadow-600 checked:border-mountain-meadow-600"
                         @change="toggleCheck"
                       />
                       <span
@@ -239,11 +261,19 @@ function toggleOpen(item) {
 }
 
 function toggleCheck() {
-  todos.edit(todos.list)
+  todos.edit(todos.list);
 }
 
-function onEnd(){
-  todos.edit(todos.list)
+function onEnd() {
+  todos.edit(todos.list);
+}
+
+function checkAllTodoDone() {
+  if (todos.list.length > 0) return todos.list.every((el) => el.check);
+}
+
+function clearAll() {
+  todos.clearList();
 }
 </script>
 
